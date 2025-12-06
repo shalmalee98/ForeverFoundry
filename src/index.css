@@ -1,0 +1,287 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    /* Indian Wedding Color Palette */
+    --background: 35 30% 97%;
+    --foreground: 25 30% 12%;
+
+    --card: 35 25% 95%;
+    --card-foreground: 25 30% 12%;
+
+    --popover: 35 30% 97%;
+    --popover-foreground: 25 30% 12%;
+
+    /* Gold - Primary */
+    --primary: 43 70% 45%;
+    --primary-foreground: 35 30% 97%;
+    --primary-glow: 43 80% 55%;
+
+    /* Maroon - Secondary */
+    --secondary: 350 60% 25%;
+    --secondary-foreground: 35 30% 97%;
+
+    /* Muted Ivory */
+    --muted: 35 20% 90%;
+    --muted-foreground: 25 20% 40%;
+
+    /* Emerald Accent */
+    --accent: 160 50% 30%;
+    --accent-foreground: 35 30% 97%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 35 25% 85%;
+    --input: 35 25% 85%;
+    --ring: 43 70% 45%;
+
+    --radius: 0.75rem;
+
+    /* Custom Wedding Variables */
+    --gold: 43 70% 45%;
+    --gold-light: 43 80% 65%;
+    --gold-dark: 43 60% 35%;
+    --maroon: 350 60% 25%;
+    --maroon-light: 350 50% 35%;
+    --ivory: 35 30% 97%;
+    --cream: 35 25% 92%;
+    --emerald: 160 50% 30%;
+    --burgundy: 345 55% 20%;
+
+    /* Gradients */
+    --gradient-gold: linear-gradient(135deg, hsl(43 70% 45%), hsl(43 80% 55%));
+    --gradient-maroon: linear-gradient(135deg, hsl(350 60% 25%), hsl(350 50% 35%));
+    --gradient-hero: linear-gradient(180deg, hsl(35 30% 97%) 0%, hsl(35 25% 92%) 100%);
+    --gradient-overlay: linear-gradient(180deg, hsla(25 30% 12% / 0.6) 0%, hsla(25 30% 12% / 0.3) 100%);
+
+    /* Shadows */
+    --shadow-gold: 0 10px 40px -10px hsl(43 70% 45% / 0.3);
+    --shadow-elegant: 0 20px 60px -15px hsl(25 30% 12% / 0.15);
+    --shadow-card: 0 4px 20px -4px hsl(25 30% 12% / 0.08);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 25 30% 8%;
+    --foreground: 35 30% 95%;
+
+    --card: 25 25% 12%;
+    --card-foreground: 35 30% 95%;
+
+    --popover: 25 30% 8%;
+    --popover-foreground: 35 30% 95%;
+
+    --primary: 43 70% 50%;
+    --primary-foreground: 25 30% 8%;
+
+    --secondary: 350 50% 35%;
+    --secondary-foreground: 35 30% 95%;
+
+    --muted: 25 20% 18%;
+    --muted-foreground: 35 20% 65%;
+
+    --accent: 160 50% 40%;
+    --accent-foreground: 25 30% 8%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 25 20% 20%;
+    --input: 25 20% 20%;
+    --ring: 43 70% 50%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .font-body {
+    font-family: 'Lato', sans-serif;
+  }
+
+  .font-hindi {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+  }
+
+  /* Mandala Pattern Background */
+  .mandala-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.08'%3E%3Cpath d='M30 30c0-11.046 8.954-20 20-20s20 8.954 20 20-8.954 20-20 20-20-8.954-20-20zm0 0c0 11.046-8.954 20-20 20S-10 41.046-10 30s8.954-20 20-20 20 8.954 20 20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* Paisley Pattern */
+  .paisley-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Cpath d='M40 10c-16.569 0-30 13.431-30 30 0 16.569 13.431 30 30 30s30-13.431 30-30c0-16.569-13.431-30-30-30zm0 50c-11.046 0-20-8.954-20-20s8.954-20 20-20 20 8.954 20 20-8.954 20-20 20z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* Gold gradient text */
+  .text-gradient-gold {
+    background: linear-gradient(135deg, hsl(43 70% 45%), hsl(43 80% 60%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Decorative border */
+  .border-ornate {
+    border-image: linear-gradient(135deg, hsl(43 70% 45%), hsl(43 80% 55%)) 1;
+  }
+
+  /* Floral corner decorations */
+  .floral-corner::before,
+  .floral-corner::after {
+    content: '❧';
+    @apply absolute text-primary text-2xl opacity-60;
+  }
+
+  .floral-corner::before {
+    @apply top-4 left-4;
+  }
+
+  .floral-corner::after {
+    @apply bottom-4 right-4 rotate-180;
+  }
+}
+
+@layer utilities {
+  /* Animation utilities */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s ease-in-out infinite;
+  }
+
+  .animate-fade-up {
+    animation: fadeUp 0.8s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+  }
+
+  .animate-slide-in-left {
+    animation: slideInLeft 0.6s ease-out forwards;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.6s ease-out forwards;
+  }
+
+  /* Staggered animation delays */
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  .animation-delay-400 { animation-delay: 400ms; }
+  .animation-delay-500 { animation-delay: 500ms; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes shimmer {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Gold shimmer effect */
+  .gold-shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(43 70% 45%) 0%,
+      hsl(43 80% 65%) 50%,
+      hsl(43 70% 45%) 100%
+    );
+    background-size: 200% 100%;
+    animation: goldShimmer 3s ease-in-out infinite;
+  }
+
+  @keyframes goldShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+}
