@@ -11,6 +11,12 @@ import Travel from "./pages/Travel";
 import Family from "./pages/Family";
 import Traditions from "./pages/Traditions";
 import NotFound from "./pages/NotFound";
+import LandingPage from "./pages/LandingPage";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
+import CreateWedding from "./pages/CreateWedding";
+import Preview from "./pages/Preview";
 
 const queryClient = new QueryClient();
 
@@ -21,7 +27,12 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/create" element={<CreateWedding />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/preview" element={<Preview />} />
           <Route path="/events" element={<Events />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/rsvp" element={<RSVP />} />
