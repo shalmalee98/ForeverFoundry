@@ -34,20 +34,13 @@ const LandingPage = () => {
             <Heart className="w-6 h-6 fill-primary text-primary" />
             <span>Forever<span className="text-primary">Foundry</span></span>
           </button>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => navigate('/login')}
-              className="px-5 py-2.5 text-foreground/80 hover:text-foreground font-medium transition"
-            >
-              Log in
-            </button>
-            <button
-              onClick={() => navigate('/signup')}
-              className="px-6 py-2.5 rounded-full bg-primary text-primary-foreground font-medium shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition"
-            >
-              Get started free
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => navigate('/builder')}
+            className="px-6 py-2.5 rounded-full bg-primary text-primary-foreground font-medium shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition"
+          >
+            Build your website for free
+          </button>
         </div>
       </nav>
 
@@ -81,10 +74,11 @@ const LandingPage = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up animation-delay-300">
             <button
-              onClick={() => navigate('/signup')}
+              type="button"
+              onClick={() => navigate('/builder')}
               className="px-8 py-4 rounded-full bg-primary text-primary-foreground text-lg font-semibold shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition"
             >
-              Start your website — free
+              Build your website for free
               <ChevronRight className="w-5 h-5" />
             </button>
             <button
@@ -276,10 +270,11 @@ const LandingPage = () => {
             Free to create. No credit card required. Publish when you’re ready.
           </p>
           <button
-            onClick={() => navigate('/signup')}
+            type="button"
+            onClick={() => navigate('/builder')}
             className="px-10 py-4 rounded-full bg-primary text-primary-foreground text-lg font-semibold shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition"
           >
-            Create your website — free
+            Build your website for free
             <ChevronRight className="w-5 h-5" />
           </button>
           <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm text-muted-foreground">
@@ -306,10 +301,13 @@ const LandingPage = () => {
             <Heart className="w-4 h-4 fill-primary text-primary" />
             ForeverFoundry
           </div>
-          <div className="flex gap-6 text-sm text-muted-foreground">
-            <button onClick={() => navigate('/login')} className="hover:text-foreground transition">Log in</button>
-            <button onClick={() => navigate('/signup')} className="hover:text-foreground transition">Sign up</button>
-          </div>
+          <button
+            type="button"
+            onClick={() => navigate('/builder')}
+            className="text-sm text-muted-foreground hover:text-foreground transition"
+          >
+            Open builder
+          </button>
         </div>
       </footer>
     </div>

@@ -109,18 +109,13 @@ const CreateWedding = () => {
   const eventTypes = ['Engagement', 'Roka', 'Mehendi', 'Sangeet', 'Haldi', 'Tilak', 'Wedding Ceremony', 'Reception', 'Custom Event'];
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('weddingUser');
-    if (!savedUser) {
-      navigate('/login');
-      return;
-    }
-
+    /** Auth skipped for now — new flow uses /builder without login */
     const currentProject = localStorage.getItem('currentProject');
     if (currentProject) {
       setFormData(JSON.parse(currentProject));
       localStorage.removeItem('currentProject');
     }
-  }, [navigate]);
+  }, []);
 
   const updateFormData = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));

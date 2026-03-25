@@ -1,0 +1,27 @@
+"use client";
+
+import { motion } from "framer-motion";
+import type { WeddingPreviewData } from "../types";
+import type { WeddingThemeTokens } from "@/lib/wedding-theme";
+
+interface Props {
+  data: WeddingPreviewData;
+  theme: WeddingThemeTokens;
+}
+
+export function TravelSection({ data, theme }: Props) {
+  return (
+    <motion.section layout className="px-6 max-w-2xl mx-auto w-full" transition={{ duration: 0.4 }}>
+      <h2 className={`text-2xl md:text-3xl mb-6 text-center ${theme.headingFont} ${theme.accent}`}>
+        Travel & stay
+      </h2>
+      <div className={`p-6 ${theme.card}`}>
+        <p className={`${theme.bodyFont} ${theme.muted} leading-relaxed`}>
+          {data.location
+            ? `We can’t wait to celebrate with you in ${data.location}. Hotel blocks, airport tips, and shuttle details will appear here when you publish your site.`
+            : "Add your location in the builder to personalize travel notes for guests. Hotel blocks, directions, and local favorites will show here."}
+        </p>
+      </div>
+    </motion.section>
+  );
+}

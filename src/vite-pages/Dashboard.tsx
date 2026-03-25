@@ -24,15 +24,15 @@ const Dashboard = () => {
   useEffect(() => {
     const savedUser = localStorage.getItem('weddingUser');
     const savedProjects = localStorage.getItem('weddingProjects');
-    
-    if (!savedUser) {
-      navigate('/login');
-      return;
+
+    /** No auth required — guest mode until accounts ship */
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    } else {
+      setUser({ name: 'Guest' });
     }
-    
-    setUser(JSON.parse(savedUser));
     if (savedProjects) setProjects(JSON.parse(savedProjects));
-  }, [navigate]);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('weddingUser');

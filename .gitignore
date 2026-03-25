@@ -1,1 +1,9 @@
 node_modules
+
+# Next.js build output & cache (never commit)
+.next/
+out/
+
+# Vite / tooling
+dist/
+*.local
