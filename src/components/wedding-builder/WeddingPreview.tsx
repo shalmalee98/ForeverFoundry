@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import type { WeddingPreviewData } from "./types";
+import type { SiteSectionId } from "./site-sections";
 import { getTheme } from "@/lib/wedding-theme";
 import { HeroSection } from "./preview/HeroSection";
 import { StorySection } from "./preview/StorySection";
@@ -9,16 +10,48 @@ import { EventsSection } from "./preview/EventsSection";
 import { RSVPSection } from "./preview/RSVPSection";
 import { GallerySection } from "./preview/GallerySection";
 import { TravelSection } from "./preview/TravelSection";
+import { PreviewSiteNav } from "./preview/PreviewSiteNav";
+import { SectionFrame } from "./preview/SectionFrame";
 
 interface Props {
   data: WeddingPreviewData;
+  /** Joy-style: in-page nav, clickable sections, focus ring */
+  designMode?: boolean;
+  activeSectionId?: SiteSectionId | null;
+  onSectionClick?: (id: SiteSectionId) => void;
 }
 
-/**
- * Live preview shell — all sections are modular for future publish/save pipelines.
- */
-export function WeddingPreview({ data }: Props) {
+function renderSection(
+  id: SiteSectionId,
+  data: WeddingPreviewData,
+  theme: ReturnType<typeof getTheme>
+) {
+  switch (id) {
+    case "hero":
+      return <HeroSection data={data} theme={theme} />;
+    case "story":
+      return <StorySection data={data} theme={theme} />;
+    case "events":
+      return <EventsSection data={data} theme={theme} />;
+    case "gallery":
+      return <GallerySection data={data} theme={theme} />;
+    case "travel":
+      return <TravelSection data={data} theme={theme} />;
+    case "rsvp":
+      return <RSVPSection data={data} theme={theme} />;
+    default:
+      return null;
+  }
+}
+
+export function WeddingPreview({ data, designMode = false, activeSectionId, onSectionClick }: Props) {
   const theme = getTheme(data.vibe);
+
+  const visibleOrdered = data.pageOrder.filter((id) => {
+    if (!data.pageVisibility[id]) return false;
+    if (id === "rsvp" && !data.rsvpEnabled) return false;
+    return true;
+  });
 
   return (
     <AnimatePresence mode="wait">
@@ -34,12 +67,34 @@ export function WeddingPreview({ data }: Props) {
             Preview as guest
           </div>
         ) : null}
-        <HeroSection data={data} theme={theme} />
-        <StorySection data={data} theme={theme} />
-        <EventsSection data={data} theme={theme} />
-        <GallerySection data={data} theme={theme} />
-        <TravelSection data={data} theme={theme} />
-        <RSVPSection data={data} theme={theme} />
+
+        <PreviewSiteNav data={data} theme={theme} />
+
+        {visibleOrdered.map((sectionId) => {
+          const inner = renderSection(sectionId, data, theme);
+          if (!inner) return null;
+
+          if (designMode) {
+            return (
+              <SectionFrame
+                key={sectionId}
+                sectionId={sectionId}
+                designMode
+                isActive={activeSectionId === sectionId}
+                onSelect={onSectionClick}
+              >
+                {inner}
+              </SectionFrame>
+            );
+          }
+
+          return (
+            <div key={sectionId} id={`preview-section-${sectionId}`} className="scroll-mt-[72px]">
+              {inner}
+            </div>
+          );
+        })}
+
         <footer className={`py-10 text-center text-sm ${theme.muted}`}>
           Made with ForeverFoundry · Private preview
         </footer>

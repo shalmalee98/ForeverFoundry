@@ -1,4 +1,5 @@
 import type { WeddingVibe } from "@/lib/wedding-theme";
+import type { SiteSectionId } from "./site-sections";
 
 export interface WeddingEventItem {
   id: string;
@@ -26,4 +27,9 @@ export interface WeddingPreviewData {
   guestMode: boolean;
   /** When non-empty, gallery shows these instead of placeholders */
   galleryImages: GalleryPreviewImage[];
+  /** Design mode: section order & visibility (Joy-style pages) */
+  pageOrder: SiteSectionId[];
+  pageVisibility: Record<SiteSectionId, boolean>;
+  /** Top-bar “RSVP is on” — hides RSVP block when false */
+  rsvpEnabled: boolean;
 }
