@@ -37,7 +37,7 @@ export function WeddingPreview({ data }: Props) {
         <HeroSection data={data} theme={theme} />
         <StorySection data={data} theme={theme} />
         <EventsSection data={data} theme={theme} />
-        <GallerySection theme={theme} />
+        <GallerySection data={data} theme={theme} />
         <TravelSection data={data} theme={theme} />
         <RSVPSection data={data} theme={theme} />
         <footer className={`py-10 text-center text-sm ${theme.muted}`}>

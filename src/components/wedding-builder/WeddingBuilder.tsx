@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Plus, Trash2, RefreshCw, Heart, ArrowLeft } from "lucide-react";
+import { Sparkles, Plus, Trash2, RefreshCw, Heart, ArrowLeft, ImagePlus } from "lucide-react";
 import { WeddingPreview } from "./WeddingPreview";
-import type { WeddingEventItem } from "./types";
+import type { GalleryPreviewImage, WeddingEventItem } from "./types";
 import type { WeddingVibe } from "@/lib/wedding-theme";
 import { WEDDING_THEMES } from "@/lib/wedding-theme";
 import { generateWeddingContentSync } from "@/lib/generate-wedding-content";
@@ -30,6 +30,13 @@ function uid() {
   return `e-${typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)}`;
 }
 
+function galleryUid() {
+  return `g-${typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)}`;
+}
+
+const MAX_GALLERY_IMAGES = 12;
+const MAX_FILE_MB = 8;
+
 export function WeddingBuilder() {
   const [booting, setBooting] = useState(true);
   const [partner1, setPartner1] = useState("Alex");
@@ -41,6 +48,10 @@ export function WeddingBuilder() {
   const [proposalStory, setProposalStory] = useState("");
   const [events, setEvents] = useState<WeddingEventItem[]>(defaultEvents);
   const [guestMode, setGuestMode] = useState(false);
+  const [galleryImages, setGalleryImages] = useState<GalleryPreviewImage[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const galleryImagesRef = useRef<GalleryPreviewImage[]>([]);
+  galleryImagesRef.current = galleryImages;
 
   const seedContent = useMemo(
     () => generateWeddingContentSync({ partner1: "Alex", partner2: "Jordan" }),
@@ -73,6 +84,36 @@ export function WeddingBuilder() {
     return () => clearTimeout(t);
   }, [booting, partner1, partner2, howTheyMet, proposalStory, runGeneration]);
 
+  /** Revoke blob URLs on unmount to avoid leaks */
+  useEffect(() => {
+    return () => {
+      galleryImagesRef.current.forEach((img) => URL.revokeObjectURL(img.url));
+    };
+  }, []);
+
+  const removeGalleryImage = useCallback((id: string) => {
+    setGalleryImages((prev) => {
+      const target = prev.find((x) => x.id === id);
+      if (target) URL.revokeObjectURL(target.url);
+      return prev.filter((x) => x.id !== id);
+    });
+  }, []);
+
+  const onGalleryFiles = useCallback((files: FileList | null) => {
+    if (!files?.length) return;
+    const next: GalleryPreviewImage[] = [];
+    let room = MAX_GALLERY_IMAGES - galleryImages.length;
+    for (let i = 0; i < files.length && room > 0; i++) {
+      const file = files[i];
+      if (!file.type.startsWith("image/")) continue;
+      if (file.size > MAX_FILE_MB * 1024 * 1024) continue;
+      next.push({ id: galleryUid(), url: URL.createObjectURL(file) });
+      room--;
+    }
+    if (next.length) setGalleryImages((prev) => [...prev, ...next].slice(0, MAX_GALLERY_IMAGES));
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }, [galleryImages.length]);
+
   const previewData = useMemo(
     () => ({
       partner1,
@@ -84,8 +125,9 @@ export function WeddingBuilder() {
       story,
       events,
       guestMode,
+      galleryImages,
     }),
-    [partner1, partner2, weddingDate, location, vibe, tagline, story, events, guestMode]
+    [partner1, partner2, weddingDate, location, vibe, tagline, story, events, guestMode, galleryImages]
   );
 
   if (booting) {
@@ -318,6 +360,67 @@ export function WeddingBuilder() {
                 </li>
               ))}
             </ul>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between gap-2">
+              <Label>Gallery photos</Label>
+              <span className="text-xs text-muted-foreground">
+                {galleryImages.length}/{MAX_GALLERY_IMAGES}
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Upload JPG, PNG, or WebP (max {MAX_FILE_MB}MB each). Shown live in the preview — stored in this tab only until you add publishing.
+            </p>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              multiple
+              className="hidden"
+              onChange={(e) => onGalleryFiles(e.target.files)}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full rounded-xl gap-2"
+              disabled={galleryImages.length >= MAX_GALLERY_IMAGES}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <ImagePlus className="h-4 w-4" />
+              Add photos
+            </Button>
+            {galleryImages.length > 0 ? (
+              <ul className="grid grid-cols-3 gap-2">
+                {galleryImages.map((img) => (
+                  <li key={img.id} className="relative group aspect-square rounded-xl overflow-hidden border border-border bg-muted/30">
+                    <img src={img.url} alt="" className="h-full w-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => removeGalleryImage(img.id)}
+                      className="absolute top-1 right-1 p-1.5 rounded-full bg-background/95 text-destructive shadow-sm md:opacity-0 md:group-hover:opacity-100 transition-opacity"
+                      aria-label="Remove photo"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            {galleryImages.length > 0 ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground"
+                onClick={() => {
+                  galleryImages.forEach((img) => URL.revokeObjectURL(img.url));
+                  setGalleryImages([]);
+                }}
+              >
+                Clear all photos
+              </Button>
+            ) : null}
           </div>
         </motion.aside>
 

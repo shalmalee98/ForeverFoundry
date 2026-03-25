@@ -8,6 +8,12 @@ export interface WeddingEventItem {
 }
 
 /** Shared props for modular preview sections — easy to persist / API later */
+/** Local preview only — object URLs from uploads; revoke when removed (see builder). */
+export interface GalleryPreviewImage {
+  id: string;
+  url: string;
+}
+
 export interface WeddingPreviewData {
   partner1: string;
   partner2: string;
@@ -18,4 +24,6 @@ export interface WeddingPreviewData {
   story: string;
   events: WeddingEventItem[];
   guestMode: boolean;
+  /** When non-empty, gallery shows these instead of placeholders */
+  galleryImages: GalleryPreviewImage[];
 }
