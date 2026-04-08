@@ -19,7 +19,12 @@ import {
   Globe,
 } from "lucide-react";
 import { WeddingPreview } from "./WeddingPreview";
-import type { GalleryPreviewImage, WeddingEventItem, WeddingPreviewData } from "./types";
+import type {
+  GalleryPreviewImage,
+  SiteCopyText,
+  WeddingEventItem,
+  WeddingPreviewData,
+} from "./types";
 import type { WeddingVibe } from "@/lib/wedding-theme";
 import { WEDDING_THEMES } from "@/lib/wedding-theme";
 import { Label } from "@/components/ui/label";
@@ -36,6 +41,7 @@ import {
 } from "@/components/ui/select";
 import { SECTION_LABELS, type SiteSectionId } from "./site-sections";
 import { cn } from "@/lib/utils";
+import { PreviewEditProvider, resolveNavLabel } from "./preview/PreviewEditContext";
 
 function moveInOrder(order: SiteSectionId[], id: SiteSectionId, dir: -1 | 1): SiteSectionId[] {
   const i = order.indexOf(id);
@@ -93,6 +99,9 @@ interface DesignStudioProps {
   previewData: WeddingPreviewData;
   onBackToIntake: () => void;
   uid: () => string;
+  setSiteCopyKey: (key: keyof SiteCopyText, value: string) => void;
+  setNavLabel: (id: SiteSectionId, value: string) => void;
+  updateEvent: (eventId: string, field: keyof WeddingEventItem, value: string) => void;
 }
 
 /**
@@ -203,12 +212,29 @@ export function DesignStudio(props: DesignStudioProps) {
             <span>Live preview — click a section to edit</span>
           </div>
           <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-muted/30 to-background">
-            <WeddingPreview
-              data={props.previewData}
-              designMode
-              activeSectionId={props.activeSectionId}
-              onSectionClick={(id) => props.setActiveSectionId(id)}
-            />
+            <PreviewEditProvider
+              value={{
+                enabled: true,
+                siteCopy: props.previewData.siteCopy,
+                setSiteCopyKey: props.setSiteCopyKey,
+                navLabels: props.previewData.navLabels,
+                setNavLabel: props.setNavLabel,
+                setPartner1: props.setPartner1,
+                setPartner2: props.setPartner2,
+                setTagline: props.setTagline,
+                setStory: props.setStory,
+                setLocation: props.setLocation,
+                setWeddingDate: props.setWeddingDate,
+                updateEvent: props.updateEvent,
+              }}
+            >
+              <WeddingPreview
+                data={props.previewData}
+                designMode
+                activeSectionId={props.activeSectionId}
+                onSectionClick={(id) => props.setActiveSectionId(id)}
+              />
+            </PreviewEditProvider>
           </div>
         </div>
 
@@ -258,7 +284,7 @@ export function DesignStudio(props: DesignStudioProps) {
                         document.getElementById(`preview-section-${id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
                       }}
                     >
-                      {SECTION_LABELS[id]}
+                      {resolveNavLabel(props.previewData.navLabels, id)}
                     </button>
                     {isRsvp ? <Lock className="h-3.5 w-3.5 text-muted-foreground shrink-0" title="RSVP settings" /> : null}
                     {id !== "hero" ? (

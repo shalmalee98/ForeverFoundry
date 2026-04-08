@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { IntakeQuestionnaire } from "./IntakeQuestionnaire";
 import { DesignStudio } from "./DesignStudio";
-import type { GalleryPreviewImage, WeddingEventItem } from "./types";
+import type { GalleryPreviewImage, SiteCopyText, WeddingEventItem } from "./types";
+import { DEFAULT_SITE_COPY } from "./types";
 import type { WeddingVibe } from "@/lib/wedding-theme";
 import { generateWeddingContentSync } from "@/lib/generate-wedding-content";
 import {
@@ -54,6 +55,20 @@ export function WeddingBuilder() {
   const [siteSlug, setSiteSlug] = useState("your-wedding");
   const [sitePublished, setSitePublished] = useState(false);
   const [activeSectionId, setActiveSectionId] = useState<SiteSectionId | null>("hero");
+  const [siteCopy, setSiteCopy] = useState(() => ({ ...DEFAULT_SITE_COPY }));
+  const [navLabels, setNavLabels] = useState<Partial<Record<SiteSectionId, string>>>({});
+
+  const setSiteCopyKey = useCallback((key: keyof SiteCopyText, value: string) => {
+    setSiteCopy((s) => ({ ...s, [key]: value }));
+  }, []);
+
+  const setNavLabel = useCallback((id: SiteSectionId, value: string) => {
+    setNavLabels((n) => ({ ...n, [id]: value }));
+  }, []);
+
+  const updateEvent = useCallback((eventId: string, field: keyof WeddingEventItem, value: string) => {
+    setEvents((list) => list.map((e) => (e.id === eventId ? { ...e, [field]: value } : e)));
+  }, []);
 
   const seedContent = useMemo(
     () => generateWeddingContentSync({ partner1: "Alex", partner2: "Jordan" }),
@@ -133,6 +148,8 @@ export function WeddingBuilder() {
       pageOrder,
       pageVisibility,
       rsvpEnabled,
+      siteCopy,
+      navLabels,
     }),
     [
       partner1,
@@ -148,6 +165,8 @@ export function WeddingBuilder() {
       pageOrder,
       pageVisibility,
       rsvpEnabled,
+      siteCopy,
+      navLabels,
     ]
   );
 
@@ -227,6 +246,9 @@ export function WeddingBuilder() {
       previewData={previewData}
       onBackToIntake={() => setPhase("intake")}
       uid={uid}
+      setSiteCopyKey={setSiteCopyKey}
+      setNavLabel={setNavLabel}
+      updateEvent={updateEvent}
     />
   );
 }

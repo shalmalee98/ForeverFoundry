@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import type { WeddingPreviewData } from "../types";
 import type { WeddingThemeTokens } from "@/lib/wedding-theme";
+import { usePreviewEdit } from "./PreviewEditContext";
+import { EditableText } from "./EditableText";
 
 interface Props {
   data: WeddingPreviewData;
@@ -12,12 +14,24 @@ interface Props {
 const PLACEHOLDER_IDS = ["1015", "1016", "1018", "1025"];
 
 export function GallerySection({ data, theme }: Props) {
+  const edit = usePreviewEdit();
   const uploads = data.galleryImages ?? [];
   const useUploads = uploads.length > 0;
 
+  const footnote = useUploads
+    ? data.siteCopy.galleryFootnoteUploads
+    : data.siteCopy.galleryFootnotePlaceholders;
+
   return (
     <motion.section layout className="px-6 max-w-4xl mx-auto w-full" transition={{ duration: 0.4 }}>
-      <h2 className={`text-2xl md:text-3xl mb-10 text-center ${theme.headingFont} ${theme.accent}`}>Gallery</h2>
+      <h2 className={`text-2xl md:text-3xl mb-10 text-center ${theme.headingFont} ${theme.accent}`}>
+        <EditableText
+          value={data.siteCopy.galleryHeading}
+          onChange={(v) => edit?.setSiteCopyKey("galleryHeading", v)}
+          className={`text-2xl md:text-3xl text-center ${theme.headingFont} ${theme.accent}`}
+          as="block"
+        />
+      </h2>
       <div
         className={`grid gap-3 ${
           useUploads && uploads.length === 1
@@ -62,7 +76,18 @@ export function GallerySection({ data, theme }: Props) {
             ))}
       </div>
       <p className={`text-center text-xs mt-4 ${theme.muted}`}>
-        {useUploads ? "Your uploads — shown only in this browser until you publish." : "Add photos in the builder, or use placeholders for now."}
+        <EditableText
+          value={footnote}
+          onChange={(v) =>
+            useUploads
+              ? edit?.setSiteCopyKey("galleryFootnoteUploads", v)
+              : edit?.setSiteCopyKey("galleryFootnotePlaceholders", v)
+          }
+          multiline
+          rows={2}
+          className={`text-xs ${theme.muted} text-center`}
+          as="block"
+        />
       </p>
     </motion.section>
   );

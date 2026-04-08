@@ -12,6 +12,8 @@ import { GallerySection } from "./preview/GallerySection";
 import { TravelSection } from "./preview/TravelSection";
 import { PreviewSiteNav } from "./preview/PreviewSiteNav";
 import { SectionFrame } from "./preview/SectionFrame";
+import { EditableText } from "./preview/EditableText";
+import { usePreviewEdit } from "./preview/PreviewEditContext";
 
 interface Props {
   data: WeddingPreviewData;
@@ -44,6 +46,37 @@ function renderSection(
   }
 }
 
+function GuestBanner({ data }: { data: WeddingPreviewData }) {
+  const edit = usePreviewEdit();
+  if (!data.guestMode) return null;
+  return (
+    <div className="bg-black/5 text-center text-xs py-2 px-4 tracking-wide uppercase">
+      <EditableText
+        value={data.siteCopy.guestBanner}
+        onChange={(v) => edit?.setSiteCopyKey("guestBanner", v)}
+        className="text-xs tracking-wide uppercase text-center"
+        as="block"
+      />
+    </div>
+  );
+}
+
+function PreviewFooter({ data, theme }: { data: WeddingPreviewData; theme: ReturnType<typeof getTheme> }) {
+  const edit = usePreviewEdit();
+  return (
+    <footer className={`py-10 text-center text-sm ${theme.muted}`}>
+      <EditableText
+        value={data.siteCopy.footerLine}
+        onChange={(v) => edit?.setSiteCopyKey("footerLine", v)}
+        className={`text-sm ${theme.muted} text-center`}
+        multiline
+        rows={2}
+        as="block"
+      />
+    </footer>
+  );
+}
+
 export function WeddingPreview({ data, designMode = false, activeSectionId, onSectionClick }: Props) {
   const theme = getTheme(data.vibe);
 
@@ -62,11 +95,7 @@ export function WeddingPreview({ data, designMode = false, activeSectionId, onSe
         transition={{ duration: 0.35 }}
         className={`min-h-full overflow-hidden rounded-2xl border border-black/5 shadow-lg ${theme.frame}`}
       >
-        {data.guestMode ? (
-          <div className="bg-black/5 text-center text-xs py-2 px-4 tracking-wide uppercase">
-            Preview as guest
-          </div>
-        ) : null}
+        <GuestBanner data={data} />
 
         <PreviewSiteNav data={data} theme={theme} />
 
@@ -95,9 +124,7 @@ export function WeddingPreview({ data, designMode = false, activeSectionId, onSe
           );
         })}
 
-        <footer className={`py-10 text-center text-sm ${theme.muted}`}>
-          Made with ForeverFoundry · Private preview
-        </footer>
+        <PreviewFooter data={data} theme={theme} />
       </motion.div>
     </AnimatePresence>
   );
